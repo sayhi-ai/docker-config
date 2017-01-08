@@ -1,27 +1,38 @@
 version: '2'
 
 services:
+#  proxy:
+#    image: sayhi/sayhi-nginx
+#    restart: always
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    volumes:
+#      - ./certs:/certs:ro
+#      - ./certs/dhparam.pem:/etc/ssl/certs/dhparam.pem:ro
+#    depends_on:
+#      - dashboard
+#      - server
+#      - page
+#    links:
+#      - page:page
+#      - server:api
+
   proxy:
-    image: sayhi/sayhi-nginx
+    image: jwilder/nginx-proxy
     restart: always
+    container_name: nginx-proxy
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./certs:/certs:ro
-      - ./certs/dhparam.pem:/etc/ssl/certs/dhparam.pem:ro
-    depends_on:
-      - dashboard
-      - server
-      - page
-    links:
-      - page:page
-      - server:api
+      - /var/run/docker.sock:/tmp/docker.sock:ro
 
   dashboard:
     image: sayhi/dashboard
     restart: always
     environment:
+      - VIRTUAL_HOST=dashboard.local
       - SERVER_URL=${SERVER}
       - DASHBOARD_URL=${DASHBOARD}
       - PAGE_URL=${PAGE}
@@ -30,6 +41,7 @@ services:
     image: sayhi/server
     restart: always
     environment:
+      - VIRTUAL_HOST=server.local
       - SERVER_URL=${SERVER}
       - DASHBOARD_URL=${DASHBOARD}
       - PAGE_URL=${PAGE}
@@ -38,6 +50,7 @@ services:
     image: sayhi/landing-page
     restart: always
     environment:
+      - VIRTUAL_HOST=page.local
       - SERVER_URL=${SERVER}
       - DASHBOARD_URL=${DASHBOARD}
       - PAGE_URL=${PAGE}

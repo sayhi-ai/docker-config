@@ -4,3 +4,5 @@ export SERVER=https://api.sayhi.ai
 export DASHBOARD=https://dashboard.sayhi.ai
 export BOTS=https://bots.sayhi.ai
 export PAGE=https://sayhi.ai
+
+export LETS_ENCRYPT_EMAIL=vader@sayhi.ai

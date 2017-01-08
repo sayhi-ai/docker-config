@@ -2,9 +2,10 @@ version: '2'
 
 services:
   dashboard:
-    build: .
+    image: sayhi/dashboard'
     ports:
       - "4000:4000"
   server:
     image: sayhi/server
-
+    ports:
+      - "8080:8080"

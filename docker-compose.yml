@@ -2,10 +2,13 @@ version: '2'
 
 services:
   dashboard:
-    image: sayhi/dashboard'
+    image: sayhi/dashboard
     ports:
       - "4000:4000"
   server:
     image: sayhi/server
     ports:
       - "8080:8080"
+  watchtower:
+    image: centurylink/watchtower
+    volumes: /var/run/docker.sock:/var/run/docker.sock

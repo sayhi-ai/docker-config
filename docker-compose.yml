@@ -1,19 +1,49 @@
 version: '2'
 
 services:
+  proxy:
+    image: sayhi/sayhi-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./certs:/certs:ro
+      - ./certs/dhparam.pem:/etc/ssl/certs/dhparam.pem:ro
+    depends_on:
+      - dashboard
+      - server
+      - page
+    links:
+      - page:page
+      - server:api
+
   dashboard:
     image: sayhi/dashboard
-    ports:
-      - "4000:4000"
+    restart: always
+    environment:
+      - SERVER_URL=${SERVER}
+      - DASHBOARD_URL=${DASHBOARD}
+      - PAGE_URL=${PAGE}
+
   server:
     image: sayhi/server
-    ports:
-      - "8080:8080"
+    restart: always
+    environment:
+      - SERVER_URL=${SERVER}
+      - DASHBOARD_URL=${DASHBOARD}
+      - PAGE_URL=${PAGE}
+
+  page:
+    image: sayhi/landing-page
+    restart: always
+    environment:
+      - SERVER_URL=${SERVER}
+      - DASHBOARD_URL=${DASHBOARD}
+      - PAGE_URL=${PAGE}
+
   watchtower:
     image: centurylink/watchtower
+    restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-  nginx:
-      image: sayhi/sayhi-nginx
-      ports:
-          - "80:80"

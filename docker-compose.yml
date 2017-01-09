@@ -9,7 +9,6 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - "./redirect.conf:/etc/nginx/conf.d/redirect.conf:ro"
       - "/var/run/docker.sock:/tmp/docker.sock:ro"
       - "/etc/nginx/vhost.d"
       - "/usr/share/nginx/html"
@@ -25,8 +24,22 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./certs:/etc/nginx/certs:rw"
 
+  dashboard:
+    image: sayhi/dashboard
+    restart: always
+    container_name: dashboard
+    environment:
+      - VIRTUAL_HOST=${DASHBOARD_DOMAIN}
+      - VIRTUAL_NETWORK=nginx-proxy
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=${DASHBOARD_DOMAIN}
+      - LETSENCRYPT_EMAIL=${LETS_ENCRYPT_EMAIL}
+      - SERVER_URL=${SERVER}
+      - DASHBOARD_URL=${DASHBOARD}
+      - PAGE_URL=${PAGE}
+
   server:
-    image: exemplator/exemplator
+    image: sayhi/server
     restart: always
     container_name: server
     environment:
@@ -40,11 +53,11 @@ services:
       - PAGE_URL=${PAGE}
 
   page:
-    image: exemplator/exemplator-page
+    image: sayhi/landing-page
     restart: always
-    container_name: page
+    container_name: landing-page
     environment:
-      - VIRTUAL_HOST=www.${PAGE_DOMAIN},${PAGE_DOMAIN}
+      - VIRTUAL_HOST=${PAGE_DOMAIN}
       - VIRTUAL_NETWORK=nginx-proxy
       - VIRTUAL_PORT=80
       - LETSENCRYPT_HOST=${PAGE_DOMAIN}

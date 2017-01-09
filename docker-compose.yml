@@ -3,6 +3,7 @@ version: "2"
 services:
   nginx-proxy:
     image: jwilder/nginx-proxy
+    restart: always
     container_name: nginx-proxy
     ports:
       - "80:80"
@@ -15,6 +16,7 @@ services:
 
   letsencrypt-nginx-proxy-companion:
     image: jrcs/letsencrypt-nginx-proxy-companion
+    restart: always
     container_name: letsencrypt-nginx-proxy-companion
     volumes_from:
       - nginx-proxy
@@ -24,8 +26,8 @@ services:
 
   dashboard:
     image: sayhi/dashboard
-    container_name: dashboard
     restart: always
+    container_name: dashboard
     environment:
       - VIRTUAL_HOST=${DASHBOARD_DOMAIN}
       - VIRTUAL_NETWORK=nginx-proxy
@@ -66,5 +68,7 @@ services:
 
   watchtower:
     image: centurylink/watchtower
+    restart: always
+    container_name: watchtower
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"

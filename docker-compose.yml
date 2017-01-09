@@ -26,7 +26,7 @@ services:
       - "./certs:/etc/nginx/certs:rw"
 
   server:
-    image: exemplator/server
+    image: exemplator/exemplator
     restart: always
     container_name: server
     environment:
@@ -42,7 +42,7 @@ services:
   page:
     image: exemplator/exemplator-page
     restart: always
-    container_name: exemplator-page
+    container_name: page
     environment:
       - VIRTUAL_HOST=www.${PAGE_DOMAIN},${PAGE_DOMAIN}
       - VIRTUAL_NETWORK=nginx-proxy

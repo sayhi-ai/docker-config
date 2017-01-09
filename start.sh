@@ -3,4 +3,4 @@
 docker network create -d bridge nginx-proxy
 
 source env.sh
-docker-compose up
+docker-compose up -d

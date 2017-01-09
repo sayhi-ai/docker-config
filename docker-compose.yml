@@ -63,3 +63,8 @@ services:
       - SERVER_URL=${SERVER}
       - DASHBOARD_URL=${DASHBOARD}
       - PAGE_URL=${PAGE}
+
+  watchtower:
+    image: centurylink/watchtower
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
